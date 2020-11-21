@@ -1,0 +1,47 @@
+---
+- name: Manage GNS3 devices add ip sla
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: remove ip sla
+      ios_config:
+        lines:
+          - no ip sla 1
+
+    - name: configure ip sla
+      ios_config:
+        authorize: yes
+        parents: ip sla 1
+        lines:
+          - icmp-echo 192.168.240.137 source-interface GigabitEthernet0/0
+          - vrf Mgmt-intf
+          - frequency 10
+          - ip sla schedule 1 life forever start-time now
+
+    - name: show ip sla summary
+      ios_command:
+        commands:
+          - show ip sla summary
+
+      register: print_output
+
+    -  debug: var=print_output.stdout_lines
+
+- name: Manage GNS3 devices sh vrf interfaces
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: show commands
+      ios_command:
+        commands:
+        - show ip vrf interface
+        - show ip int brief
+
+      register: print_output
+      
+    -  debug: var=print_output.stdout_lines
+
