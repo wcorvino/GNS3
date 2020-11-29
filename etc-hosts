@@ -1,0 +1,12 @@
+127.0.1.1	NetworkAutomation-1
+127.0.0.1	localhost
+::1	localhost ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff02::1	ip6-allnodes
+ff02::2	ip6-allrouters
+192.168.240.131 R1
+192.168.240.132 R2
+192.168.240.130 R3
+192.168.240.134 R4
+192.168.240.140 S1
