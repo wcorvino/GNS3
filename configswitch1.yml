@@ -28,16 +28,36 @@
           - service timestamps debug datetime msec localtime
           - service timestamps log datetime msec localtime
           
-          - "vlan 1,10,20,30,40,50,100,101,200"
+          - "vlan 1,10,20,30,40,50,100,101"
           - ip default-gateway 192.168.240.2
-          - "ip dhcp snooping vlan 100,101"
+          - "ip dhcp snooping vlan 100,101,200"
           
           - no ip dhcp snooping information option
           - ip dhcp snooping
           - "ip arp inspection vlan 100,101"
           - spanning-tree portfast bpduguard default
-          
+    - name: Interface Settings
+      ios_config:
+         parents:
+           - interface {{ item.interface }}
+         lines:
+           - switchport access vlan {{ item.vlan }}
+           - switchport voice vlan {{ item.voice_vlan }}
+           - switchport host
+           - switchport port-security maximum 2
+           - switchport port-security
+           - switchport port-security aging time 2
+           - switchport port-security aging type inactivity
+           - switchport port-security violation restrict
+           - ip arp inspection limit rate 100
+           - ip dhcp snooping limit rate 100
+         after:
+           - no shutdown
+      with_items:
+        - { interface : GigabitEthernet0/0, vlan : 100, voice_vlan : 101 }
+        - { interface : GigabitEthernet1/0, vlan : 10, voice_vlan : 101 }
+        - { interface : GigabitEthernet2/0, vlan : 20, voice_vlan : 101 }
+        - { interface : GigabitEthernet3/0, vlan : 30, voice_vlan : 101 }                    
       register: print_output
-      
     -  debug: var=print_output
     
