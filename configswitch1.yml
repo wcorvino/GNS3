@@ -8,6 +8,8 @@
     - name: Global config settings
       ios_config:
         lines:
+          - no ip name-server 1.1.1.1
+          - no ntp server 1.0.0.1
           - vtp mode transparent
           - spanning-tree mode rapid-pvst
           - udld enable
